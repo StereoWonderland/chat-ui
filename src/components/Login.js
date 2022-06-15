@@ -40,7 +40,16 @@ const Login = ({ setErrorMessage, setUser }) => {
 
     const createAccount = (event) => {
         const userObject = { username, password }
-        axios.post('http://localhost:3001/api/users', userObject)
+
+        if (username === '') {
+            setErrorMessage('Username cannot be empty')
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000)
+        } else {
+            axios.post('http://localhost:3001/api/users', userObject)
+        }
+
     }
 
     return (

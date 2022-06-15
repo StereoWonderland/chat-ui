@@ -6,7 +6,7 @@ import axios from 'axios'
 import loginService from '../services/login'
 import chatService from '../services/chat'
 
-const Login = ({ setErrorMessage, setUser }) => {
+const Login = ({ setErrorMessage, setUser, socket }) => {
     const [ username, setUsername ] = useState('')
     const [ password, setPassword] = useState('')
 
@@ -28,6 +28,7 @@ const Login = ({ setErrorMessage, setUser }) => {
 
             setUser(user)
             chatService.setToken(user.token)
+            chatService.verifySocket(user.token, socket)
             setUsername('')
             setPassword('')
         } catch (exception) {

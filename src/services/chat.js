@@ -28,4 +28,12 @@ const sendMessage = async (content, targetUserId) => {
     return await axios.post(baseUrl, message, config)
 }
 
-export default { setToken, getAll, sendMessage }
+const sendMessageSocket = (message, socket) => {
+    socket.emit('chat message', message, token.substring(7))
+}
+
+const verifySocket = (token, socket) => {
+    socket.emit('identify user', token)
+}
+
+export default { setToken, getAll, sendMessage, verifySocket, sendMessageSocket }

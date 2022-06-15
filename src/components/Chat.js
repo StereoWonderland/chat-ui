@@ -8,7 +8,7 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import Button from 'react-bootstrap/Button'
 import Users from './Users'
 
-const Chat = ({ user, setErrorMessage }) => {
+const Chat = ({ user, setErrorMessage, socket }) => {
     const [ users, setUsers ] = useState({})
     const [ messages, setMessages ] = useState([])
     const [ targetUserId, setTargetUserId ] = useState(null)
@@ -29,9 +29,11 @@ const Chat = ({ user, setErrorMessage }) => {
 
     useEffect(() => {
         getUsersAndMessages()
-        const interval = setInterval(getUsersAndMessages, 1000)
-        return () => clearInterval(interval)
     }, [])
+
+    socket.on('chat message', (message) => {
+        setMessages(messages.concat(message))
+    })
 
     const handleTargetUserChange = (selectedUserId) => () => {
         if (users[selectedUserId] === user.username) {
@@ -59,6 +61,10 @@ const Chat = ({ user, setErrorMessage }) => {
             .then(message => {
                 setMessages(messages.concat(message.data))
                 setChatMessage('')
+                return message.data
+            })
+            .then(message => {
+                chatService.sendMessageSocket(message, socket)
             })
             // console.log(err)
             // setErrorMessage('Error sending message')
